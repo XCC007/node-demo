@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= xiangcemingzi %>相册</title>
+    <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        .thumbnail{
+            height:100px;
+        }
+        .thumbnail img{
+            max-height: 80px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">呵呵相册</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="/">首页</a></li>
+                <li><a href="/upload">上传图片</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/">首页</a></li>
+        <li><a href="#"><%= xiangcemingzi %>相册</a></li>
+    </ol>
+</div>
+
+<section class="container">
+    <div class="row" id="box">
+
+    </div>
+</section>
+
+
+<!--模板-->
+<script type="text/template" id="template">
+    <div class="col-sm-6 col-md-4 col-lg-2">
+        <div class="thumbnail">
+            <a href="/albums/<%= xiangcemingzi %>/{{= lujing }}" target="_blank"> <img src="/albums/<%= xiangcemingzi %>/{{= lujing }}" alt=""></a>
+        </div>
+    </div>
+</script>
+
+<script src="/public/js/jquery-1.12.3.min.js"></script>
+<script src="/public/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/public/js/underscore.js"></script>
+<script type="text/javascript">
+    //得到模板字符串
+    var templateString = $("#template").html();
+    //模板函数
+    var compileFunction = _.template(templateString);
+
+    //发出Ajax请求，请求JSON，请求JSON之后数据绑定，上DOM。
+    $.get("/getPhotos",{"wenjianjia" : "<%= xiangcemingzi %>" },function(data){
+        _.each(data.jieguo,function(lujing){
+            var dictionary = {"lujing" : lujing};
+            //数据绑定，并且转为jQuery对象
+            var $dom = $(compileFunction(dictionary));
+            //上树
+            $("#box").append($dom);
+        })
+    });
+</script>
+</body>
+</html>

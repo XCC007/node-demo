@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>上传文件</title>
+    <link href="public/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">呵呵相册</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="/">首页</a></li>
+                <li class="active"><a href="#">上传图片</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<section class="container">
+    <h1>欢迎上传文件</h1>
+    <p>● 想创建一个文件夹？那请填写文件夹名字：</p>
+    <p>
+        <input type="text" id="wenjianjia" maxlength="10">
+    </p>
+    <p>
+        <input type="button" value="创建" id="chuangjian">
+    </p>
+
+    <p>
+        ● 上传图片？请选择你要上传的文件夹
+    </p>
+    <form action="/shangchuan" method="post" enctype="multipart/form-data">
+        <p>
+            <select name="wenjianjia"  >
+                <% for(var i = 0 ; i < wenjianjias.length ; i++){%>
+                    <option value="<%= wenjianjias[i].mingzi %>"><%= wenjianjias[i].mingzi %></option>
+                <%
+                    }
+                %>
+            </select>
+        </p>
+        <p>
+            <input type="file" name="wenjian">
+        </p>
+        <p>
+            <input type="submit">
+        </p>
+    </form>
+</section>
+
+
+<script src="/public/js/jquery-1.12.3.min.js"></script>
+<script src="/public/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/public/js/underscore.js"></script>
+<script type="text/javascript">
+    $("#chuangjian").click(function(){
+        var wenjianjia = $("#wenjianjia").val();
+        $.get("/createAlbum",{"wenjianjia":wenjianjia},function(data){
+            if(data == "RIGHT"){
+                alert("成功");
+            }else if(data == "WRONG1"){
+                alert("非法字符");
+            }else if(data == "WRONG2"){
+                alert("长度太长");
+            }else if(data == "WRONG3"){
+                alert("服务器错误");
+            }else if(data == "WRONG4"){
+                alert("和现有文件夹重名了");
+            }
+        });
+    });
+</script>
+</body>
+</html>
